@@ -9,3 +9,7 @@ build-windows:
 
 test:
 	make -C examples test
+
+
+test-derive:
+	cd nj-derive; RUST_LOG=debug cargo test -- --nocapture

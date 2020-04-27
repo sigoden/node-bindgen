@@ -29,8 +29,8 @@ use crate::util::default_function_property_name;
 
 pub fn generate_function(input_fn: ItemFn, args: AttributeArgs) -> TokenStream {
     
-    //println!("args: {:#?}, fn: {:#?}",args,input_fn);
-    let fn_wrapper = FunctionMetadata::new(input_fn, args);
+    println!("args: {:#?}, fn: {:#?}",args,input_fn);
+    let fn_wrapper = FunctionAst::from_ast(input_fn, args);
     fn_wrapper.as_token_stream()
 }
 
@@ -43,13 +43,15 @@ pub enum FunctionAttribute {
     Other,
 }
 
-struct FunctionMetadata {
+struct FunctionAst {
     fn_item: ItemFn,
     args: AttributeArgs,
 }
 
-impl FunctionMetadata {
-    fn new(fn_item: ItemFn, args: AttributeArgs) -> Self {
+impl FunctionAst {
+
+    /// parse from ast
+    fn from_ast(fn_item: ItemFn, args: AttributeArgs) -> Self {
         Self { fn_item, args }
     }
 
