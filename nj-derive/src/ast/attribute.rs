@@ -19,11 +19,11 @@ use syn::Path;
 /// setter
 /// mt
 pub enum FunctionAttribute {
-    Getter(NestedMeta),
-    Setter(NestedMeta),
+    Getter(Ident),
+    Setter(Ident),
     Constructor(Ident),
     Name(LitStr),
-    MT(NestedMeta)
+    MT(Ident)
 }
 
 impl FunctionAttribute {
@@ -50,6 +50,12 @@ impl FunctionAttribute {
                         let ident = find_any_identifier(p)?;
                         if ident == "constructor" {
                                 Ok(Self::Constructor(ident))
+                        } else if  ident == "getter" {
+                            Ok(Self::Getter(ident))
+                        } else if ident == "setter" {
+                            Ok(Self::Setter(ident))
+                        } else if ident == "mt" {
+                            Ok(Self::MT(ident))
                         } else {
                             Err(Error::new(ident.span(), "unrecognized attribute name"))
                         } 
