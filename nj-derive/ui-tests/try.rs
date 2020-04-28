@@ -3,7 +3,7 @@ use node_bindgen::core::NjError;
  
 
 #[node_bindgen]
-fn hello(arg1: Option2<bool>) -> i32 {        
+fn hello(arg1: Option<bool>) -> i32 {        
     4
 }
 
