@@ -8,8 +8,6 @@ repository = "https://github.com/infinyon/node-bindgen"
 readme = "README.md"
 license = "Apache-2.0"
 
-
-
 #[patch.crates-io]
 #flv-future-aio = { path = "../flv-future/src/future-aio"}
 

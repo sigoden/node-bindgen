@@ -6,35 +6,34 @@ use syn::TypeReference;
 use proc_macro2::Span;
 use proc_macro2::TokenStream;
 
-pub struct MyTypePath(TypePath);
+pub struct MyTypePath<'a>(&'a TypePath);
 
-impl MyTypePath {
+impl <'a>MyTypePath<'a> {
 
     /// given this, convert into normalized type signature
-    pub fn from(ty: Box<Type>) -> Option<Self> {
+    /*
+    pub fn from(ty: &Box<Type>) -> Option<Self> {
 
-        match *ty {
+        match ty {
             Type::Path(path_type) => Some(MyTypePath(path_type)),
             _ => None
         }
     }
+    */
 
-    pub fn new(path_type: TypePath) -> Self {
+    pub fn new(path_type: &'a TypePath) -> Self {
 
         Self(path_type)
     }
 
-    pub fn inner(&self) -> &TypePath {
+    pub fn inner(&self) -> &'a TypePath {
         &self.0
     }
 
-    /// return possible type name
-    pub fn type_name(&self) -> Option<Ident> {
+    /// return any first one
+    pub fn type_name(&self) -> Option<&Ident> {
 
-        for segment in &self.0.path.segments {
-            return Some(segment.ident.clone());   
-        }
-        None
+        self.0.path.segments.iter().find(|_| true).map(|segment| &segment.ident )
     }
 
     /// generate code as part of invoking rust function
@@ -61,10 +60,10 @@ pub fn rust_arg_var(index: usize) -> Ident {
 
 
 
-pub struct MyReferenceType(TypeReference);
+pub struct MyReferenceType<'a>(&'a TypeReference);
 
-impl MyReferenceType {
-    pub fn new(ty: TypeReference) -> Self {
+impl <'a> MyReferenceType<'a> {
+    pub fn new(ty: &'a TypeReference) -> Self {
         Self(ty)
     }
 

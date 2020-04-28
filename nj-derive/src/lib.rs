@@ -1,18 +1,17 @@
 extern crate proc_macro;
 
-mod function;
-mod class;
+//mod function;
+//mod class;
 mod util;
-mod parser;
 mod ast;
 
 //use function::generate_function;
-use ast::FunctionAttributes;
+
 //use class::generate_class;
-use function::FunctionAttribute;
+//use function::FunctionAttribute;
 //use parser::NodeItem;
-use function::FunctionArgMetadata;
-use function::FunctionContext;
+//use function::FunctionArgMetadata;
+//use function::FunctionContext;
 use proc_macro::TokenStream;
 
     
@@ -39,28 +38,32 @@ use proc_macro::TokenStream;
 ///         sum(msg).to_js(&js_env)
 ///     }
 #[proc_macro_attribute]
-pub fn node_bindgen(args: TokenStream, _item: TokenStream) -> TokenStream {
+pub fn node_bindgen(args: TokenStream, item: TokenStream) -> TokenStream {
 
     use syn::AttributeArgs;
     use quote::quote;
 
-    println!("token stream 1: args: {:#?}",args);
-// let parsed_item = syn::parse_macro_input!(item as NodeItem);
+    use ast::FunctionAttributes;
+    use ast::FunctionArgs;
+    use ast::NodeItem;    
+
     let attribute_args = syn::parse_macro_input!(args as AttributeArgs);
-    match FunctionAttributes::from_ast(attribute_args) {
-        Ok(_) => {},
-        Err(err) => {
-            return err.to_compile_error().into()
+    
+    let attribute = match FunctionAttributes::from_ast(attribute_args) {
+        Ok(attr) => attr,
+        Err(err) => return err.to_compile_error().into()
+    };
+
+    let parsed_item = syn::parse_macro_input!(item as NodeItem);
+    let expand_expression = match parsed_item {
+        NodeItem::Function(fn_item) => {
+            let args = FunctionArgs::from_ast(&fn_item);
+        }
+        NodeItem::Impl(impl_item) => {
 
         }
-    }
-
-    /*
-    let expand_expression = match parsed_item {
-        NodeItem::Function(fn_item) => generate_function(fn_item,attribute_args),
-        NodeItem::Impl(impl_item) => generate_class(impl_item)
     };
-    */
+    
     
     let expand_expression = quote! {
 

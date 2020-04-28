@@ -26,10 +26,12 @@ use crate::util::MyTypePath;
 use crate::util::rust_arg_var;
 use crate::util::MyReferenceType;
 use crate::util::default_function_property_name;
+use crate::ast::FunctionAttributes;
 
-pub fn generate_function(input_fn: ItemFn, args: AttributeArgs) -> TokenStream {
+/// parse and generate function
+pub fn generate_function(input_fn: ItemFn, attributes: FunctionAttributes) -> TokenStream {
     
-    println!("args: {:#?}, fn: {:#?}",args,input_fn);
+    println!("fn: {:#?}",ItemFn);
     let fn_wrapper = FunctionAst::from_ast(input_fn, args);
     fn_wrapper.as_token_stream()
 }
