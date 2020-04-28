@@ -55,9 +55,11 @@ pub fn node_bindgen(args: TokenStream, item: TokenStream) -> TokenStream {
     };
 
     let parsed_item = syn::parse_macro_input!(item as NodeItem);
-    let expand_expression = match parsed_item {
+    let _fn_expression = match parsed_item {
         NodeItem::Function(fn_item) => {
-            let args = FunctionArgs::from_ast(&fn_item);
+            if let Err(err) = FunctionArgs::from_ast(&fn_item) {
+                return err.to_compile_error().into()
+            }
         }
         NodeItem::Impl(impl_item) => {
 

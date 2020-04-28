@@ -150,7 +150,7 @@ enum FunctionArgType<'a> {
 }
 
 
-/// find generic with match idetn
+/// find generic with match ident
 fn find_generic<'a,'b>(generics: &'a Generics, ident: &'b Ident) -> Option<&'a TypeParam> {
 
     generics.type_params().find(|ty| ty.ident.to_string() == ident.to_string() )

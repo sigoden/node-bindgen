@@ -12,4 +12,7 @@ test:
 
 
 test-derive:
-	cd nj-derive; RUST_LOG=debug cargo test -- --nocapture
+	cd nj-derive; RUST_LOG=debug cargo test derive_ui -- --nocapture
+
+test-try:
+	cd nj-derive; RUST_LOG=debug cargo test derive_try -- --nocapture
