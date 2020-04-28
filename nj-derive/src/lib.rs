@@ -6,11 +6,11 @@ mod util;
 mod parser;
 mod ast;
 
-use function::generate_function;
+//use function::generate_function;
 use ast::FunctionAttributes;
-use class::generate_class;
+//use class::generate_class;
 use function::FunctionAttribute;
-use parser::NodeItem;
+//use parser::NodeItem;
 use function::FunctionArgMetadata;
 use function::FunctionContext;
 use proc_macro::TokenStream;
@@ -39,18 +39,20 @@ use proc_macro::TokenStream;
 ///         sum(msg).to_js(&js_env)
 ///     }
 #[proc_macro_attribute]
-pub fn node_bindgen(args: TokenStream, item: TokenStream) -> TokenStream {
+pub fn node_bindgen(args: TokenStream, _item: TokenStream) -> TokenStream {
 
     use syn::AttributeArgs;
     use quote::quote;
-    use crate::ast::FunctionAttributes;
 
     println!("token stream 1: args: {:#?}",args);
 // let parsed_item = syn::parse_macro_input!(item as NodeItem);
     let attribute_args = syn::parse_macro_input!(args as AttributeArgs);
     match FunctionAttributes::from_ast(attribute_args) {
         Ok(_) => {},
-        Err(err) => return err.to_compile_error().into()
+        Err(err) => {
+            return err.to_compile_error().into()
+
+        }
     }
 
     /*

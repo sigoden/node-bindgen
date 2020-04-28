@@ -6,6 +6,11 @@ fn hello(count: i32) -> String {
     format!("hello world {}", count)
 }
 
+#[node_bindgen(constructor)]
+fn hello(count: i32) -> String {        
+    format!("hello world {}", count)
+}
+
 fn main() {
     
 }

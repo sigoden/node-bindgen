@@ -1,15 +1,16 @@
 
-use proc_macro2::Literal;
+
 use syn::AttributeArgs;
-use syn::{ Result, Token};
-use syn::parse::{Parse, ParseStream};
-use syn::ItemImpl;
-use syn::ItemFn;
+use syn::Result;
 use syn::spanned::Spanned;
 use syn::Error;
 use syn::NestedMeta;
 use syn::Meta;
 use syn::MetaNameValue;
+use syn::Lit;
+use syn::LitStr;
+use syn::Ident;
+use syn::Path;
 
 /// Represents function attribute
 /// Attribute can be
@@ -20,8 +21,8 @@ use syn::MetaNameValue;
 pub enum FunctionAttribute {
     Getter(NestedMeta),
     Setter(NestedMeta),
-    Constructor(NestedMeta),
-    Name(MetaNameValue),
+    Constructor(Ident),
+    Name(LitStr),
     MT(NestedMeta)
 }
 
@@ -35,12 +36,24 @@ impl FunctionAttribute {
                 match meta {
                     Meta::NameValue(name_value) => {
                         if has_attribute(&name_value,"name") {
-                            Ok(Self::Name(name_value))
+                            // check make sure name is str literal
+                            match name_value.lit {
+                                Lit::Str(str) => Ok(Self::Name(str)),
+                                _ => Err(Error::new(name_value.span(), "name is not string"))
+                            }
                         } else {
                             Err(Error::new(name_value.span(), "unrecognized attribute"))
                         }
                     },
-                    Meta::Path(p) => Err(Error::new(p.span(), "unrecognized attribute")),
+                    Meta::Path(p) => {
+                        
+                        let ident = find_any_identifier(p)?;
+                        if ident == "constructor" {
+                                Ok(Self::Constructor(ident))
+                        } else {
+                            Err(Error::new(ident.span(), "unrecognized attribute name"))
+                        } 
+                    }
                     Meta::List(l) => Err(Error::new(l.span(),"unrecognized attribute"))
                 }
             },
@@ -57,6 +70,22 @@ fn has_attribute(name_value: &MetaNameValue,attr_name: &str) -> bool {
         .iter()
         .find(|seg| seg.ident == attr_name)
         .is_some()
+}
+
+fn find_any_identifier(path: Path) -> Result<Ident> {
+    
+    if path.segments.len() == 0 {
+        Err(Error::new(path.span(),"invalid attribute"))
+    } else {
+        Ok(path
+            .segments
+            .into_iter()
+            .find(|_| true)
+            .map(|segment| segment.ident )
+            .unwrap())
+    }
+
+                    
 }
 
 
