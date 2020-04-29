@@ -1,21 +1,13 @@
 extern crate proc_macro;
 
-//mod function;
-//mod class;
+
 mod util;
 mod ast;
+mod generator;
 
-//use function::generate_function;
-
-//use class::generate_class;
-//use function::FunctionAttribute;
-//use parser::NodeItem;
-//use function::FunctionArgMetadata;
-//use function::FunctionContext;
 use proc_macro::TokenStream;
 
     
-
 
 /// This turns regular rust function into N-API compatible native module
 /// 
@@ -46,23 +38,31 @@ pub fn node_bindgen(args: TokenStream, item: TokenStream) -> TokenStream {
     use ast::FunctionAttributes;
     use ast::FunctionArgs;
     use ast::NodeItem;    
+    use generator::FunctionGenerator;
 
     let attribute_args = syn::parse_macro_input!(args as AttributeArgs);
     
-    let attribute = match FunctionAttributes::from_ast(attribute_args) {
-        Ok(attr) => attr,
-        Err(err) => return err.to_compile_error().into()
-    };
+    let attribute: FunctionAttributes = 
+        match FunctionAttributes::from_ast(attribute_args) {
+            Ok(attr) => attr,
+            Err(err) => return err.to_compile_error().into()
+        };
 
     let parsed_item = syn::parse_macro_input!(item as NodeItem);
     let out_express = match parsed_item {
         NodeItem::Function(fn_item) => {
-            if let Err(err) = FunctionArgs::from_ast(&fn_item) {
-                return err.to_compile_error().into()
-            } else {
-                quote! {
-                    #fn_item
+            
+            match FunctionArgs::from_ast(&fn_item) {
+                Err(err) => return err.to_compile_error().into(),
+                Ok(args) => {
+                    println!("args: {:#?}",args);
+
+                    let generator = FunctionGenerator::new(&fn_item,args,attribute);
+                    quote! {
+                        #fn_item
+                    }
                 }
+                
             }
         }
         NodeItem::Impl(impl_item) => {
@@ -72,6 +72,7 @@ pub fn node_bindgen(args: TokenStream, item: TokenStream) -> TokenStream {
         }
     };
     
+   // println!("{:#?}",out_express);
     
     out_express.into()
 }

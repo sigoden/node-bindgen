@@ -20,6 +20,7 @@ use crate::util::MyReferenceType;
 
 
 /// Represents functional arguments
+#[derive(Debug)]
 pub struct FunctionArgs<'a> {
     args: Vec<FunctionArg<'a>>,
     is_method: bool
@@ -90,6 +91,7 @@ fn has_receiver(sig: &Signature) -> bool {
 }
 
 
+#[derive(Debug)]
 pub struct FunctionArg<'a> {
     arg_index: u32,
     typ: FunctionArgType<'a>,
@@ -142,6 +144,7 @@ impl <'a> FunctionArg<'a>  {
 
 
 /// Categorize function argument
+#[derive(Debug)]
 enum FunctionArgType<'a> {
     Path(MyTypePath<'a>),            // normal type
     Ref(MyReferenceType<'a>),                          // reference type
@@ -158,7 +161,7 @@ fn find_generic<'a,'b>(generics: &'a Generics, ident: &'b Ident) -> Option<&'a T
 }
 
 
-
+#[derive(Debug)]
 struct ClosureType<'a> {
     ty: &'a ParenthesizedGenericArguments,
     ident: &'a Ident,

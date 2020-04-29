@@ -6,6 +6,7 @@ use syn::TypeReference;
 use proc_macro2::Span;
 use proc_macro2::TokenStream;
 
+#[derive(Debug)]
 pub struct MyTypePath<'a>(&'a TypePath);
 
 impl <'a>MyTypePath<'a> {
@@ -59,7 +60,7 @@ pub fn rust_arg_var(index: usize) -> Ident {
 }
 
 
-
+#[derive(Debug)]
 pub struct MyReferenceType<'a>(&'a TypeReference);
 
 impl <'a> MyReferenceType<'a> {

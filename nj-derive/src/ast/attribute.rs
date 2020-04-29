@@ -96,22 +96,23 @@ fn find_any_identifier(path: Path) -> Result<Ident> {
 
 
 pub struct FunctionAttributes {
-    attr: Vec<FunctionAttribute>
+    attrs: Vec<FunctionAttribute>
 }
 
 impl FunctionAttributes {
 
-    pub fn from_ast(attrs: AttributeArgs) -> Result<()> {
+    pub fn from_ast(args: AttributeArgs) -> Result<Self> {
 
-        println!("attrs: {:#?}",attrs);
-        let mut f_attrs: Vec<FunctionAttribute> = vec![];
+        println!("attrs: {:#?}",args);
+        let mut attrs: Vec<FunctionAttribute> = vec![];
     
-        for attr in attrs {
-            f_attrs.push(FunctionAttribute::from_ast(attr)?);
+        for attr in args {
+            attrs.push(FunctionAttribute::from_ast(attr)?);
         }
         
-        Ok(())
-
+        Ok(Self {
+            attrs
+        })
     }
 }
 

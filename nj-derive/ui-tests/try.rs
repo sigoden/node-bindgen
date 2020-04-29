@@ -3,8 +3,8 @@ use node_bindgen::core::NjError;
  
 
 #[node_bindgen]
-fn hello(arg1: Option<bool>) -> i32 {        
-    4
+fn hello(arg1: i32) -> i32 {        
+    arg1*2
 }
 
 
