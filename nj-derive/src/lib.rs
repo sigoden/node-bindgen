@@ -72,7 +72,7 @@ pub fn node_bindgen(args: TokenStream, item: TokenStream) -> TokenStream {
         }
     };
     
-   // println!("{:#?}",out_express);
+    println!("{}",out_express);
     
     out_express.into()
 }

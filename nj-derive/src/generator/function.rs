@@ -1,7 +1,7 @@
 use quote::quote;
 use proc_macro2::TokenStream;
 use syn::ItemFn;
-
+use syn::Ident;
 
 use crate::ast::FunctionArgs;
 use crate::ast::FunctionAttributes;
@@ -30,6 +30,17 @@ impl <'a>FunctionGenerator<'a> {
         }
 
     }
-    
 
+    /// function name identifier
+    fn name(&self) -> &Ident {
+        &self.input_fn.sig.ident
+    }
+    
 }
+
+
+ 
+
+
+
+
